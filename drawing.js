@@ -641,12 +641,12 @@ const showFPS = () =>{
 		let FPS_STATUS=undefined;
 
 		if (frame==SETTINGS.dynamic_framerate){
-			FPS_STATUS="动态";
+			FPS_STATUS="🟢动态";
 		}
 		else{
-			FPS_STATUS="静态";
+			FPS_STATUS="🔴静态";
 		}
-		div.textContent = FPS_STATUS+"("+frame.toString()+"FPS)";
+		div.textContent = FPS_STATUS;
 		setTimeout(showFPS,100);
 	}
 }
