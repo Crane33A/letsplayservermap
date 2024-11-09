@@ -85,7 +85,7 @@ const DRAWING = {
 		document.getElementById("loading").style.display = "none";
 	},
 	zoomToPoint: (x, y) => {
-		frame=SETTINGS.dynamic_framerate;
+		//frame=SETTINGS.dynamic_framerate;
 		targetX = x * zoom - window.innerWidth / 2;
 		targetY = y * zoom - window.innerHeight / 2;
 		startX = -getCanvasOffsetX();
@@ -149,7 +149,7 @@ window.onresize = resize;
 resize();
 
 CANVAS.on("mouse:down", options => {
-	frame=SETTINGS.dynamic_framerate;
+	//frame=SETTINGS.dynamic_framerate;
 	mouseDown = Date.now();
 	shouldClearPanes = true;
 	twoFingerDistance = 0;
@@ -168,7 +168,7 @@ CANVAS.on("mouse:down", options => {
 	//frame=SETTINGS.fixed_framerate;
 });
 CANVAS.on("mouse:up", options => {
-	frame=SETTINGS.dynamic_framerate;
+	//frame=SETTINGS.dynamic_framerate;
 	const event = options.e;
 	if (!("touches" in event) || event.touches.length === 0) {
 		mouseDown = 0;
@@ -182,7 +182,7 @@ CANVAS.on("mouse:up", options => {
 CANVAS.on("mouse:move", options => {
 	const event = options.e;
 	if (mouseDown > 0) {
-		frame=SETTINGS.dynamic_framerate;
+		//frame=SETTINGS.dynamic_framerate;
 		if ("movementX" in event && "movementY" in event) {
 			CANVAS.relativePan(new fabric.Point(event.movementX, event.movementY));
 			shouldClearPanes = false;
@@ -223,7 +223,7 @@ CANVAS.on("mouse:move", options => {
 	//frame=SETTINGS.fixed_framerate;
 });
 CANVAS.on("mouse:wheel", options => {
-	frame=SETTINGS.dynamic_framerate;
+	//frame=SETTINGS.dynamic_framerate;
 	const event = options.e;
 	DRAWING.zoom(event.deltaY, event.offsetX, event.offsetY);
 	event.preventDefault();
@@ -613,13 +613,29 @@ const update = () => {
 };
 update();
 
-const switchToFixedFramerate = () =>{
-	if ((targetX==undefined||targetX==getCanvasOffsetX())&&(targetY==undefined||targetY==getCanvasOffsetY())){
+let PrevX=getCanvasOffsetX();
+let PrevY=getCanvasOffsetY();
+let distance=undefined;
+const switchFramerate = () =>{
+	distance=Math.sqrt(Math.pow(PrevX-getCanvasOffsetX(),2)+Math.pow(PrevY-getCanvasOffsetY(),2));
+	if (distance==0){
 		frame=SETTINGS.fixed_framerate;
 	}
-	setTimeout(switchToFixedFramerate,1000);
+	else if (distance>100){
+		frame=SETTINGS.high_dynamic_framerate;
+	}
+	else if (distance>20){
+		frame=SETTINGS.dynamic_framerate;
+	}
+	else{
+		frame=SETTINGS.low_dynamic_framerate;
+	}
+
+	PrevX=getCanvasOffsetX();
+	PrevY=getCanvasOffsetY();
+	setTimeout(switchFramerate,100);
 }
-switchToFixedFramerate();
+switchFramerate();
 
 if (SETTINGS.showFPS){
 	var div = document.createElement('div');
@@ -641,10 +657,16 @@ const showFPS = () =>{
 		let FPS_STATUS=undefined;
 
 		if (frame==SETTINGS.dynamic_framerate){
-			FPS_STATUS="🟢动态";
+			FPS_STATUS="🟠中速";
+		}
+		else if(frame==SETTINGS.high_dynamic_framerate){
+			FPS_STATUS="🔴高速";
+		}
+		else if(frame==SETTINGS.low_dynamic_framerate){
+			FPS_STATUS="🟡低速";
 		}
 		else{
-			FPS_STATUS="🔴静态";
+			FPS_STATUS="🟢静止";
 		}
 		div.textContent = FPS_STATUS;
 		setTimeout(showFPS,100);
