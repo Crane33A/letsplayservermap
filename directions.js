@@ -259,14 +259,5 @@ const createTextElement = text => {
 	element.innerText = text;
 	return element;
 };
-/*
-document.getElementById("directions_icon").onclick = () => {
-	DOCUMENT.clearPanes(true);
-	DIRECTIONS.drawDirectionsRoute(pathStations, pathRoutes);
-	document.getElementById("directions").style.display = "block";
-	shouldFetch = true;
-	FETCH_DATA.fetchData();
-};
-*/
 
 export default DIRECTIONS;

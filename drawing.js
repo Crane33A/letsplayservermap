@@ -149,7 +149,6 @@ window.onresize = resize;
 resize();
 
 CANVAS.on("mouse:down", options => {
-	//frame=SETTINGS.dynamic_framerate;
 	mouseDown = Date.now();
 	shouldClearPanes = true;
 	twoFingerDistance = 0;
@@ -165,10 +164,8 @@ CANVAS.on("mouse:down", options => {
 		touchX = newTouchX / newFingerCount;
 		touchY = newTouchY / newFingerCount;
 	}
-	//frame=SETTINGS.fixed_framerate;
 });
 CANVAS.on("mouse:up", options => {
-	//frame=SETTINGS.dynamic_framerate;
 	const event = options.e;
 	if (!("touches" in event) || event.touches.length === 0) {
 		mouseDown = 0;
@@ -177,12 +174,10 @@ CANVAS.on("mouse:up", options => {
 		DOCUMENT.clearPanes(true);
 		DATA.redraw();
 	}
-	//frame=SETTINGS.fixed_framerate;
 });
 CANVAS.on("mouse:move", options => {
 	const event = options.e;
 	if (mouseDown > 0) {
-		//frame=SETTINGS.dynamic_framerate;
 		if ("movementX" in event && "movementY" in event) {
 			CANVAS.relativePan(new fabric.Point(event.movementX, event.movementY));
 			shouldClearPanes = false;
@@ -220,15 +215,12 @@ CANVAS.on("mouse:move", options => {
 	}
 	// getSegment(event.offsetX, event.offsetY); // TODO mouse detection
 	event.stopPropagation();
-	//frame=SETTINGS.fixed_framerate;
 });
 CANVAS.on("mouse:wheel", options => {
-	//frame=SETTINGS.dynamic_framerate;
 	const event = options.e;
 	DRAWING.zoom(event.deltaY, event.offsetX, event.offsetY);
 	event.preventDefault();
 	event.stopPropagation();
-	//frame=SETTINGS.fixed_framerate;
 });
 
 const distanceSquared = (x1, y1, x2, y2) => (Math.abs(x2 - x1) ** 2) + (Math.abs(y2 - y1) ** 2);
@@ -624,7 +616,7 @@ const switchFramerate = () =>{
 	else if (distance>100){
 		frame=SETTINGS.high_dynamic_framerate;
 	}
-	else if (distance>20){
+	else if(distance>20){
 		frame=SETTINGS.dynamic_framerate;
 	}
 	else{
@@ -641,11 +633,10 @@ if (SETTINGS.showFPS){
 	var div = document.createElement('div');
 
 	div.style.position = 'absolute';
-	div.style.top = '0'; // 距离顶部0px
-	div.style.left = '0'; // 距离左边0px
-	//div.style.backgroundColor = '#fff'; // 背景颜色（可选）
-	div.style.padding = '10px'; // 内边距（可选）
-	div.style.zIndex = '1000'; // 确保覆盖其他内容
+	div.style.top = '0'; 
+	div.style.left = '0'; 
+	div.style.padding = '10px'; 
+	div.style.zIndex = '1000'; 
 
 	div.textContent = frame.toString();
 	document.body.appendChild(div);

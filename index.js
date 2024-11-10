@@ -35,37 +35,7 @@ const init = () => {
 			}, DATA_REFRESH_INTERVAL, false, () => true, result => DATA.parseOBA(result, LAT_OFFSET, LON_OFFSET, ZOOM_OFFSET)).fetchData();
 		} else {
 			new FetchData(() => SETTINGS.url + "data", DATA_REFRESH_INTERVAL, false, () => true, result => DATA.parseMTR(result)).fetchData();
-			/*new FetchData(() => SETTINGS.url + "info", INFO_REFRESH_INTERVAL, false, () => true, result => {
-				const playerListElement = document.getElementById("player_list");
-				playerListElement.innerText = "";
-
-				for (let i = 0; i < result.length; i++) {
-					result[i].forEach(playerData => {
-						const {player, name, number, destination, circular, color} = playerData;
-						const noRoute = name === "" && destination === "";
-						playerListElement.innerHTML +=
-							`<div class="player text">` +
-							`<img src="https://minotar.net/avatar/${player}" alt=""/>` +
-							`<span style="${noRoute ? "" : "max-width: 6em; min-width: 6em; overflow: hidden"}">&nbsp;&nbsp;&nbsp;${player}</span>` +
-							`<div class="player_route" style="display: ${noRoute ? "none" : ""}; border-left: 0.3em solid ${UTILITIES.convertColor(color)}">` +
-							`<div class="arrival">` +
-							`<span class="arrival_text">&nbsp;${number.replace(/\|/g, " ")} ${name.split("||")[0].replace(/\|/g, " ")}</span>` +
-							`</div>` +
-							`<div class="arrival">` +
-							`<span class="material-icons small">${circular === "" ? "chevron_right" : circular === "cw" ? "rotate_right" : "rotate_left"}</span>` +
-							`<span class="arrival_text">${destination.replace(/\|/g, " ")}</span>` +
-							`</div>` +
-							`</div>` +
-							`</div>`;
-					});
-
-					if (result[i].length > 0) {
-						playerListElement.innerHTML += `<div class="spacer"></div>`;
-					}
-				}
-
-				document.getElementById("settings").style.maxHeight = window.innerHeight - 80 + "px";
-			}).fetchData();*/
+			
 		}
 	}
 };

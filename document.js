@@ -108,30 +108,6 @@ document.getElementById("text_zoom_out_icon").onclick = () => {
 	SETTINGS.size = Math.max(0.2, SETTINGS.size / 1.1);
 	DATA.redraw();
 };
-/*
-document.getElementById("clear_directions_1_icon").onclick = () => {
-	document.getElementById("directions_result").style.display = "none";
-	const searchBox = document.getElementById("directions_box_1");
-	searchBox.value = "";
-	searchBox.focus();
-};
-document.getElementById("clear_directions_2_icon").onclick = () => {
-	document.getElementById("directions_result").style.display = "none";
-	const searchBox = document.getElementById("directions_box_2");
-	searchBox.value = "";
-	searchBox.focus();
-};
-*/
-/*
-document.getElementById("density_view_icon").onclick = event => {
-	SETTINGS.densityView++;
-	if (SETTINGS.densityView >= 3) {
-		SETTINGS.densityView = 0;
-	}
-	event.target.innerText = SETTINGS.densityView === 2 ? "person_off" : SETTINGS.densityView === 1 ? "group" : "person";
-	DATA.redraw();
-}
-*/
 document.getElementById("toggle_text_icon").onclick = event => {
 	const buttonElement = event.target;
 	if (buttonElement.innerText.includes("off")) {

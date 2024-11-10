@@ -82,15 +82,7 @@ const UTILITIES = {
 					points.push(UTILITIES.rotatePoint(0, y - signY * absX + (isTopRight ? 1 : -1) * signX * endOffset2, direction1));
 					points.push(UTILITIES.rotatePoint(x - signX * endOffset2, y, direction1));
 				} else {
-					// if (rotatedDirection === 45 && isTopRight || rotatedDirection === 135 && !isTopRight) {
-					// 	const endOffset1 = getEndOffset(absY / 2, false);
-					// 	points.push(UTILITIES.rotatePoint(0, -signY * endOffset1, direction1));
-					// 	const finalPoint = getFinalPoint();
-					// 	points.push(UTILITIES.rotatePoint(x + signX * finalPoint["x"], signY * absX - signY * endOffset1 - signX * finalPoint["y"], direction1));
-					// 	points.push(UTILITIES.rotatePoint(x + signX * finalPoint["x"], y + signX * finalPoint["y"], direction1));
-					// } else {
-					// 	points.push(UTILITIES.rotatePoint(0, y - signY * absX + signX, direction1));
-					// }
+					
 				}
 			}
 		}
