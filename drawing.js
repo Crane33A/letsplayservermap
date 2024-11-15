@@ -713,16 +713,16 @@ const showSTA = () =>{
 		let FPS_STATUS=undefined;
 
 		if(framemode==2){
-			FPS_STATUS="🔴全速";
+			FPS_STATUS="🔴Turbo";
 		}
 		else if(framemode==1){
-			FPS_STATUS="🟡同步";
+			FPS_STATUS="🟡Sync";
 		}
 		else{
-			FPS_STATUS="🟢静止";
+			FPS_STATUS="🟢Static";
 		}
 
-		div.textContent = FPS_STATUS+'\n'+(1000/deltat).toFixed(1);
+		div.textContent = FPS_STATUS+'\nFramerate:'+(1000/deltat).toFixed(1);
 
 		setTimeout(showSTA,100);
 	}
