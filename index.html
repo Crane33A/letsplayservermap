@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Railway System Map</title>
+	<title>Let's Play Server Map(Static Data,Optimized)</title>
 	<link rel="stylesheet" href="index.css">
 	<!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Serif+TC">
@@ -25,25 +25,25 @@
 </head>
 <body>
 <canvas id="canvas"></canvas>
-<div id="loading" class="material-icons large">加载中……</div>
+<div id="loading" class="material-icons large">Loading...</div>
 <div id="search" class="box">
 	<div class="search_top">
-		<span class="material-icons">搜索</span>
-		<label for="search_box">搜索</label>
+		<span class="material-icons">Search</span>
+		<label for="search_box">Search</label>
 		<input id="search_box" class="text text_box" type="text"/>
 		<span id="clear_search_icon" class="material-icons clickable right_align" style="display: none">clear</span>
-		<span id="settings_icon" class="material-icons clickable right_align">设置</span>
+		<span id="settings_icon" class="material-icons clickable right_align">Settings</span>
 	</div>
 	<div id="search_results_stations" class="search_results"></div>
 	<div id="search_results_routes" class="search_results"></div>
 	<div id="station_info" class="search_results" style="display: none">
 		<div class="info_top">
-			<span class="material-icons right_align" style="opacity: 0">关闭</span>
+			<span class="material-icons right_align" style="opacity: 0">Close</span>
 			<div id="station_name" class="info_name text"></div>
-			<span id="clear_station_info_button" class="material-icons clickable right_align">关闭</span>
+			<span id="clear_station_info_button" class="material-icons clickable right_align">Close</span>
 		</div>
 		<div class="info_middle">
-			<span class="material-icons small">此站的坐标</span>
+			<span class="material-icons small">Coordinates</span>
 			<span id="station_coordinates" class="text"></span>
 			&nbsp;&nbsp;&nbsp;
 			<span class="material-icons small">sell</span>
