@@ -4,7 +4,31 @@ import SETTINGS from "./settings.js";
 import ACTIONS from "./actions.js";
 import DATA from "./data.js";
 
-let frame=SETTINGS.dynamic_framerate;
+let lT = 0;
+let refreshInterval = 0;
+let mRcycT=0;
+let defaultRefreshRate=0;
+function measureRefreshRate() {
+  requestAnimationFrame(function(time) {
+    if (lT > 0) {
+      refreshInterval += (time - lT);
+    }
+    lT = time;
+	mRcycT+=1;
+	if(mRcycT<=10){
+		measureRefreshRate();
+	}
+	else{
+		defaultRefreshRate=Math.round(10000/refreshInterval);
+		console.log('refreshRate:', defaultRefreshRate, 'Hz');
+	}
+  });
+}
+measureRefreshRate();
+
+
+let frame=SETTINGS.low_dynamic_framerate;
+let framemode=1;
 const OBJECT_CACHE = {};
 const DRAWING = {
 	drawMap: (lineQueue, stationQueue, connectionQueue) => {
@@ -577,11 +601,28 @@ const MIN_SPEED = 0.0001;
 const SPEED_MULTIPLIER = 3;
 const delta = 1;
 
+let FPSFrameGenTList=[];
+
 let lastTime=performance.now();
 let interval=0;
+let deltat=1000/SETTINGS.fixed_framerate;
+
+let FPSSyncRatio=1;
+let FPSMaxSyncRatio=1;
+let a=performance.now();
 
 const update = () => {
-	interval=1000/frame;
+	//deltat=performance.now()-a;
+	//a=performance.now()
+	if(framemode==1){
+		interval=1000/FPSSyncRatio/defaultRefreshRate;
+	}
+	else if(framemode==2){
+		interval=0;
+	}
+	else{
+		interval=1000/SETTINGS.fixed_framerate;
+	}
 	const currentTime=performance.now();
 	if (currentTime - lastTime >= interval){
 		lastTime = currentTime;
@@ -599,7 +640,31 @@ const update = () => {
 			}
 		}
 		CANVAS._objects.sort((a, b) => Math.sign(a["z"] - b["z"]));
+		
 		CANVAS.renderAll();
+		deltat=performance.now()-a;
+		a=performance.now();
+	}
+
+	if(framemode==1||framemode==2){
+		let runTimeFrameGenTSum=0;
+		FPSFrameGenTList.push(deltat);
+		if (FPSFrameGenTList.length==defaultRefreshRate+1){
+			FPSFrameGenTList.shift();
+		}
+		for(let i=0;i<FPSFrameGenTList.length;i+=1){
+			runTimeFrameGenTSum+=FPSFrameGenTList[i];
+		}
+		runTimeFrameGenTSum/=FPSFrameGenTList.length;
+		FPSSyncRatio=runTimeFrameGenTSum/(1000/defaultRefreshRate);
+		FPSMaxSyncRatio=Math.max(...FPSFrameGenTList)/(1000/defaultRefreshRate);
+
+		if(FPSSyncRatio<1){
+			FPSSyncRatio=1;
+		}
+	}
+	else{
+
 	}
 	requestAnimationFrame(update);
 };
@@ -608,26 +673,25 @@ update();
 let PrevX=getCanvasOffsetX();
 let PrevY=getCanvasOffsetY();
 let distance=undefined;
-const switchFramerate = () =>{
+const switchFramemode = () =>{
 	distance=Math.sqrt(Math.pow(PrevX-getCanvasOffsetX(),2)+Math.pow(PrevY-getCanvasOffsetY(),2));
-	if (distance==0){
-		frame=SETTINGS.fixed_framerate;
-	}
-	else if (distance>100){
-		frame=SETTINGS.high_dynamic_framerate;
-	}
-	else if(distance>20){
-		frame=SETTINGS.dynamic_framerate;
+	if(distance==0){
+		framemode=0;
 	}
 	else{
-		frame=SETTINGS.low_dynamic_framerate;
+		if(FPSSyncRatio>SETTINGS.turboThreshold||FPSMaxSyncRatio>SETTINGS.turboPeakThreshold){
+			framemode=2;
+		}
+		else{
+			framemode=1;
+		}
 	}
 
 	PrevX=getCanvasOffsetX();
 	PrevY=getCanvasOffsetY();
-	setTimeout(switchFramerate,100);
+	setTimeout(switchFramemode,100);
 }
-switchFramerate();
+switchFramemode();
 
 if (SETTINGS.showFPS){
 	var div = document.createElement('div');
@@ -635,34 +699,34 @@ if (SETTINGS.showFPS){
 	div.style.position = 'absolute';
 	div.style.top = '0'; 
 	div.style.left = '0'; 
-	div.style.padding = '10px'; 
-	div.style.zIndex = '1000'; 
+	div.style.padding = '20px'; 
+	div.style.zIndex = '1000';
+	div.style.whiteSpace = 'pre-wrap';
 
-	div.textContent = frame.toString();
+	div.textContent = "";
 	document.body.appendChild(div);
 }
 
 
-const showFPS = () =>{
+const showSTA = () =>{
 	if(SETTINGS.showFPS){
 		let FPS_STATUS=undefined;
 
-		if (frame==SETTINGS.dynamic_framerate){
-			FPS_STATUS="🟠中速";
+		if(framemode==2){
+			FPS_STATUS="🔴全速";
 		}
-		else if(frame==SETTINGS.high_dynamic_framerate){
-			FPS_STATUS="🔴高速";
-		}
-		else if(frame==SETTINGS.low_dynamic_framerate){
-			FPS_STATUS="🟡低速";
+		else if(framemode==1){
+			FPS_STATUS="🟡同步";
 		}
 		else{
 			FPS_STATUS="🟢静止";
 		}
-		div.textContent = FPS_STATUS;
-		setTimeout(showFPS,100);
+
+		div.textContent = FPS_STATUS+'\n'+(1000/deltat).toFixed(1);
+
+		setTimeout(showSTA,100);
 	}
 }
-showFPS();
+showSTA();
 
 export default DRAWING;
